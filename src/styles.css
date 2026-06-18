@@ -798,7 +798,7 @@ input {
   font-size: 0.82rem;
   font-weight: 700;
   padding: 6px 13px;
-  border-radius: 99px;
+  border-radius: 11px;
   background: color-mix(in srgb, var(--mc, var(--stem)) 16%, var(--paper));
   color: var(--loam);
   border: 1px solid color-mix(in srgb, var(--mc, var(--stem)) 40%, transparent);

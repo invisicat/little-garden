@@ -18,7 +18,7 @@ export const MOODS: Record<MoodKey, Mood> = {
     key: "radiant",
     label: "radiant",
     bloom: "#F4A93C", // marigold
-    face: "☀",
+    face: "🌞",
     note: "a sunlit kind of day",
   },
   good: {
@@ -46,7 +46,7 @@ export const MOODS: Record<MoodKey, Mood> = {
     key: "stormy",
     label: "stormy",
     bloom: "#E8705B", // poppy
-    face: "⛈",
+    face: "⛈️",
     note: "weathered something",
   },
 };
