@@ -57,21 +57,19 @@ export function FloralFrame({ variant = "frame" }: { variant?: "frame" | "chip" 
   );
 }
 
-/** One little baby's-breath sprig — a few dots on a thin stem, pointing up. */
+/** A little blossom cluster — just the soft white & pink petals, no stem. */
 function Floret({ alt }: { alt: boolean }) {
   const a = alt ? "#ffffff" : "#f3b9d2";
   const b = alt ? "#f0b2cc" : "#ffffff";
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24">
-      <g stroke="#b9ccab" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.7">
-        <path d="M12 24 V12 M12 17 L8 13 M12 15 L16.5 10.5" />
-      </g>
-      <circle cx="12" cy="10" r="2.6" fill={a} />
-      <circle cx="8" cy="12" r="2" fill={b} />
-      <circle cx="16.5" cy="10.5" r="2" fill={a} />
-      <circle cx="12" cy="6.4" r="2.2" fill={b} />
-      <circle cx="9.6" cy="8" r="1.3" fill="#ffe6f1" />
-      <circle cx="14.4" cy="8" r="1.2" fill="#ffffff" />
+    <svg width="21" height="21" viewBox="0 0 24 24">
+      <circle cx="12" cy="8.5" r="2.3" fill={b} />
+      <circle cx="8" cy="11" r="2.4" fill={a} />
+      <circle cx="16" cy="11" r="2.4" fill={a} />
+      <circle cx="10" cy="15" r="2.1" fill={b} />
+      <circle cx="15" cy="15" r="2.1" fill={b} />
+      <circle cx="12.2" cy="11.6" r="2.6" fill={a} />
+      <circle cx="12.2" cy="11.6" r="1" fill="#ffe6f1" />
     </svg>
   );
 }
