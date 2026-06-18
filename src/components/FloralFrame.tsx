@@ -15,7 +15,7 @@ const CORNERS = [
   { x: 93, y: 96, r: 150 },
 ];
 
-const BASE_SCALE: Record<Variant, number> = { sign: 1.2, chip: 0.72 };
+const BASE_SCALE: Record<Variant, number> = { sign: 1.55, chip: 0.95 };
 
 // little stable hash → pseudo-random
 function hash(str: string): number {
