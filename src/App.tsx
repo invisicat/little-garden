@@ -6,6 +6,7 @@ import { Almanac } from "./components/Almanac";
 import { EntrySheet } from "./components/EntrySheet";
 import { DayCard } from "./components/DayCard";
 import { Settings } from "./components/Settings";
+import { InstallPrompt } from "./components/InstallPrompt";
 import { Nav, type Tab } from "./components/Nav";
 import { getAllEntries, loadPrefs, savePrefs, type Entry, type Prefs } from "./lib/db";
 import { dayKey, isFuture, seasonOfKey, type Season } from "./lib/date";
@@ -67,6 +68,8 @@ export default function App() {
           onSeasonChange={setSeason}
         />
       )}
+
+      <InstallPrompt />
 
       <Nav
         tab={tab}
