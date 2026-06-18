@@ -9,6 +9,7 @@
 import { Database } from "bun:sqlite";
 import webpush from "web-push";
 import index from "./index.html";
+import flowers from "./flowers.html";
 
 const PORT = Number(process.env.PORT ?? 3000);
 const PUBLIC = `${import.meta.dir}/public`;
@@ -59,6 +60,8 @@ const server = Bun.serve({
 
   routes: {
     "/": index,
+    "/flowers": flowers,
+    "/flowers.html": flowers,
 
     "/api/push/key": () => json({ key: VAPID_PUBLIC }),
 

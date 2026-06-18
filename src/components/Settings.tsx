@@ -181,6 +181,10 @@ export function Settings({ prefs, entries, onChange, onClose }: Props) {
             🌱 {entries.length} {entries.length === 1 ? "day" : "days"} live safely on this device.
             Nothing you write ever leaves it.
           </p>
+
+          <a className="settings__lab" href="./flowers.html">
+            🌼 visit the flower lab
+          </a>
         </div>
 
         <div className="sheet__foot sheet__foot--single">

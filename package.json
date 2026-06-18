@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --hot server.ts",
     "start": "NODE_ENV=production bun server.ts",
-    "build": "rm -rf dist && bun build ./index.html --outdir dist --minify && cp -R public/. dist/ && touch dist/.nojekyll",
+    "build": "rm -rf dist && bun build ./index.html ./flowers.html --outdir dist --minify && cp -R public/. dist/ && touch dist/.nojekyll",
     "vercel-build": "bun run build"
   },
   "devDependencies": {
