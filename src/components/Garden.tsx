@@ -161,7 +161,7 @@ export function Garden({
           {layout.items.map((it) =>
             it.type === "marker" ? (
               <div
-                className="month-marker"
+                className="month-marker petal-edge"
                 key={`m-${it.key}`}
                 style={{ top: `${it.y}px` }}
                 data-season={seasonOfKey(it.key + "-01")}

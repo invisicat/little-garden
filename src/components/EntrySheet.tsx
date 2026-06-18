@@ -61,7 +61,7 @@ export function EntrySheet({ date, existing, onClose, onSaved }: Props) {
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div
-        className={`sheet ${saving ? "sheet--planting" : ""}`}
+        className={`sheet petal-edge ${saving ? "sheet--planting" : ""}`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-label="Plant your day"
