@@ -1,0 +1,27 @@
+{
+  "name": "whimsical",
+  "module": "server.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot server.ts",
+    "start": "NODE_ENV=production bun server.ts",
+    "build": "rm -rf dist && bun build ./index.html --outdir dist --minify && cp -R public/. dist/ && touch dist/.nojekyll",
+    "vercel-build": "bun run build"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/web-push": "^3.6.4",
+    "bun-plugin-tailwind": "^0.1.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "web-push": "^3.6.7"
+  }
+}
