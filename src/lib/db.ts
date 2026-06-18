@@ -71,10 +71,13 @@ export async function deleteEntry(date: string): Promise<void> {
 /* ============================================================
    Small key/value prefs in localStorage (name, reminder time…).
    ============================================================ */
+export type ThemePref = "day" | "night" | "auto";
+
 export type Prefs = {
   name: string;
   reminderTime: string; // "HH:MM" local
   remindersOn: boolean;
+  theme: ThemePref;
 };
 
 const PREFS_KEY = "little-garden-prefs";
@@ -94,7 +97,7 @@ export function savePrefs(p: Prefs): void {
 }
 
 function defaultPrefs(): Prefs {
-  return { name: "", reminderTime: "20:00", remindersOn: false };
+  return { name: "", reminderTime: "20:00", remindersOn: false, theme: "auto" };
 }
 
 /** Object URLs for a set of blobs, with a disposer. */

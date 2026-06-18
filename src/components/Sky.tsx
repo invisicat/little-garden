@@ -5,23 +5,35 @@ import React, { useEffect, useState } from "react";
  * shift with the hour — dawn, midday, dusk, night — so the garden always
  * sits in the right light.
  */
-export function Sky() {
-  const [vars, setVars] = useState(() => skyVars(new Date().getHours()));
+export function Sky({ night = false }: { night?: boolean }) {
+  const [vars, setVars] = useState(() => skyVars(new Date().getHours(), night));
 
   useEffect(() => {
-    const id = setInterval(() => setVars(skyVars(new Date().getHours())), 60_000);
+    setVars(skyVars(new Date().getHours(), night));
+    const id = setInterval(() => setVars(skyVars(new Date().getHours(), night)), 60_000);
     return () => clearInterval(id);
-  }, []);
+  }, [night]);
 
   return (
     <>
-      <div className="sky" style={vars as React.CSSProperties} />
+      <div className={`sky ${night ? "sky--night" : ""}`} style={vars as React.CSSProperties} />
       <div className="sun" style={vars as React.CSSProperties} />
     </>
   );
 }
 
-function skyVars(hour: number): Record<string, string> {
+function skyVars(hour: number, night: boolean): Record<string, string> {
+  // a forced night theme keeps the moon out regardless of the hour
+  if (night) {
+    return {
+      "--sky-top": "#243352",
+      "--sky-mid": "#1b2735",
+      "--sun-top": "9%",
+      "--sun-left": "73%",
+      "--sun-core": "#e2e8f4", // moon glow
+    };
+  }
+
   // dawn 5-8, day 8-17, dusk 17-20, night otherwise
   let top = "#dceef0",
     mid = "#eef4ea",

@@ -86,6 +86,29 @@ export function Settings({ prefs, entries, onChange, onClose }: Props) {
             />
           </div>
 
+          <div className="field">
+            <span className="field__label">appearance</span>
+            <div className="seg" role="radiogroup" aria-label="Appearance">
+              {(
+                [
+                  { key: "day", label: "☀ day" },
+                  { key: "night", label: "🌙 night" },
+                  { key: "auto", label: "auto" },
+                ] as const
+              ).map((t) => (
+                <button
+                  key={t.key}
+                  role="radio"
+                  aria-checked={prefs.theme === t.key}
+                  className={`seg__btn ${prefs.theme === t.key ? "seg__btn--on" : ""}`}
+                  onClick={() => onChange({ ...prefs, theme: t.key })}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="settings__divider" />
 
           <div className="field">

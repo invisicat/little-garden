@@ -18,6 +18,25 @@ export default function App() {
   const [prefs, setPrefs] = useState<Prefs>(() => loadPrefs());
   const [season, setSeason] = useState<Season>(() => seasonOfKey(dayKey()));
 
+  // theme: explicit day/night, or "auto" following the device's color scheme
+  const [systemDark, setSystemDark] = useState(
+    () => window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia?.("(prefers-color-scheme: dark)");
+    if (!mq) return;
+    const onChange = () => setSystemDark(mq.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+  const night = prefs.theme === "night" || (prefs.theme === "auto" && systemDark);
+  useEffect(() => {
+    document.documentElement.dataset.theme = night ? "night" : "day";
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", night ? "#161f1a" : "#EFF3E9");
+  }, [night]);
+
   // overlays
   const [editDate, setEditDate] = useState<string | null>(null); // entry sheet
   const [viewDate, setViewDate] = useState<string | null>(null); // day card
@@ -47,7 +66,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Sky />
+      <Sky night={night} />
       <Ambient season={season} />
 
       {tab === "garden" ? (
