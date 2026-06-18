@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { putEntry, type Entry } from "../lib/db";
 import { MOOD_ORDER, MOODS, WEATHER, WEATHER_ORDER, type MoodKey, type WeatherKey } from "../lib/mood";
 import { prettyDate } from "../lib/date";
+import { DraggableSheet } from "./Sheet";
+import { PetalBurst } from "./PetalBurst";
 
 type Props = {
   date: string;
@@ -59,14 +62,12 @@ export function EntrySheet({ date, existing, onClose, onSaved }: Props) {
   }
 
   return (
-    <div className="sheet-backdrop" onClick={onClose}>
-      <div
-        className={`sheet ${saving ? "sheet--planting" : ""}`}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-label="Plant your day"
-      >
-        <div className="sheet__grip" />
+    <DraggableSheet
+      className={`sheet ${saving ? "sheet--planting" : ""}`}
+      label="Plant your day"
+      onClose={onClose}
+    >
+      {saving && <PetalBurst />}
         <div className="sheet__scroll">
           <header className="sheet__head">
             <span className="eyebrow">{existing ? "tending" : "planting"}</span>
@@ -80,17 +81,26 @@ export function EntrySheet({ date, existing, onClose, onSaved }: Props) {
               {MOOD_ORDER.map((m) => {
                 const on = mood === m;
                 return (
-                  <button
+                  <motion.button
                     key={m}
                     role="radio"
                     aria-checked={on}
                     className={`mood ${on ? "mood--on" : ""}`}
                     style={on ? { ["--mc" as string]: MOODS[m].bloom } : undefined}
                     onClick={() => setMood(m)}
+                    whileTap={{ scale: 0.9 }}
+                    animate={on ? { y: -3 } : { y: 0 }}
+                    transition={{ type: "spring", stiffness: 480, damping: 16 }}
                   >
-                    <span className="mood__face">{MOODS[m].face}</span>
+                    <motion.span
+                      className="mood__face"
+                      animate={on ? { scale: [1, 1.35, 1], rotate: [0, -9, 0] } : {}}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    >
+                      {MOODS[m].face}
+                    </motion.span>
                     <span className="mood__label">{MOODS[m].label}</span>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -167,15 +177,18 @@ export function EntrySheet({ date, existing, onClose, onSaved }: Props) {
             <label className="field__label">the sky outside</label>
             <div className="weather">
               {WEATHER_ORDER.map((w) => (
-                <button
+                <motion.button
                   key={w}
                   className={`wbtn ${weather === w ? "wbtn--on" : ""}`}
                   aria-pressed={weather === w}
                   aria-label={WEATHER[w].label}
                   onClick={() => setWeather(weather === w ? null : w)}
+                  animate={weather === w ? { y: -2, scale: 1.05 } : { y: 0, scale: 1 }}
+                  whileTap={{ scale: 0.85, rotate: -8 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 14 }}
                 >
                   {WEATHER[w].glyph}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -189,8 +202,7 @@ export function EntrySheet({ date, existing, onClose, onSaved }: Props) {
             {saving ? "planting…" : existing ? "save changes 🌱" : "plant it 🌱"}
           </button>
         </div>
-      </div>
-    </div>
+    </DraggableSheet>
   );
 }
 

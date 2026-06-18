@@ -58,7 +58,7 @@ export function Calendar({ entries, onOpenDay, onPlantDate, onSeasonChange }: Pr
         ))}
       </div>
 
-      <div className="cal__grid">
+      <div className="cal__grid" key={month}>
         {cells.map((key, i) => {
           if (!key) return <span key={i} className="cal__cell cal__cell--empty" />;
           const entry = byDate.get(key);
@@ -71,6 +71,7 @@ export function Calendar({ entries, onOpenDay, onPlantDate, onSeasonChange }: Pr
               className={`cal__cell ${entry ? "cal__cell--grown" : ""} ${
                 today ? "cal__cell--today" : ""
               } ${future ? "cal__cell--future" : ""}`}
+              style={{ ["--i" as string]: i } as React.CSSProperties}
               disabled={future}
               onClick={() => (entry ? onOpenDay(key) : onPlantDate(key))}
               aria-label={`${monthLabel(month + "-01")} ${day}${entry ? ", planted" : ""}`}

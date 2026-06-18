@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PlantFromEntry } from "./PlantSVG";
 import { FloralFrame } from "./FloralFrame";
+import { DraggableSheet } from "./Sheet";
 import type { Entry } from "../lib/db";
 import { MOODS, WEATHER } from "../lib/mood";
 import { prettyDate } from "../lib/date";
@@ -24,13 +25,7 @@ export function DayCard({ entry, onClose, onEdit }: Props) {
   const mood = MOODS[entry.mood];
 
   return (
-    <div className="sheet-backdrop" onClick={onClose}>
-      <div
-        className="card"
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-label={prettyDate(entry.date)}
-      >
+    <DraggableSheet className="card" label={prettyDate(entry.date)} onClose={onClose}>
         <button className="card__close" onClick={onClose} aria-label="Close">
           ×
         </button>
@@ -76,7 +71,6 @@ export function DayCard({ entry, onClose, onEdit }: Props) {
         <button className="btn btn--ghost card__edit" onClick={onEdit}>
           tend this day
         </button>
-      </div>
-    </div>
+    </DraggableSheet>
   );
 }

@@ -18,7 +18,50 @@ export function Sky({ night = false }: { night?: boolean }) {
     <>
       <div className={`sky ${night ? "sky--night" : ""}`} style={vars as React.CSSProperties} />
       <div className="sun" style={vars as React.CSSProperties} />
+      {night && <Fireflies />}
     </>
+  );
+}
+
+/** A handful of fireflies that wander and blink — only out after dark. */
+function Fireflies() {
+  const bugs = React.useMemo(
+    () =>
+      Array.from({ length: 9 }, (_, i) => {
+        const r = (n: number) => {
+          const v = Math.sin(i * 19.73 + n * 53.17) * 43758.5453;
+          return ((v % 1) + 1) % 1;
+        };
+        return {
+          top: 24 + r(1) * 52,
+          left: 8 + r(2) * 84,
+          fdur: 9 + r(3) * 9,
+          bdur: 2.4 + r(4) * 2.6,
+          delay: -r(5) * 8,
+          scale: 0.7 + r(6) * 0.8,
+        };
+      }),
+    [],
+  );
+  return (
+    <div className="fireflies" aria-hidden="true">
+      {bugs.map((b, i) => (
+        <span
+          key={i}
+          className="firefly"
+          style={
+            {
+              top: `${b.top}%`,
+              left: `${b.left}%`,
+              "--fsize": b.scale,
+              "--fdur": `${b.fdur}s`,
+              "--bdur": `${b.bdur}s`,
+              "--fdelay": `${b.delay}s`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </div>
   );
 }
 

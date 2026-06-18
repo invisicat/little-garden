@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { TodayPlot } from "./TodayPlot";
 import { PlantFromEntry } from "./PlantSVG";
 import { WildCluster, Bouquet } from "./Florets";
@@ -31,6 +32,20 @@ type Props = {
 const ROW_H = 138;
 const MARKER_H = 88;
 
+// reveal a node/marker once, a little before it's fully on screen
+const REVEAL_VP = { once: true, amount: 0.3 } as const;
+
+/** Per-plant float timing, so each bobs on its own unhurried clock. */
+function bobStyle(date: string): React.CSSProperties {
+  const s = seed(date);
+  const dur = 6 + (s % 50) / 10; // 6.0–11.0s
+  const delay = -((s % 70) / 10); // staggered negative offset
+  return {
+    ["--bob" as string]: `${dur}s`,
+    ["--bob-delay" as string]: `${delay}s`,
+  } as React.CSSProperties;
+}
+
 export function Garden({
   entries,
   prefs,
@@ -50,6 +65,18 @@ export function Garden({
   const layout = useMemo(() => buildLayout(past), [past]);
 
   const name = prefs.name.trim();
+  const reduce = useReducedMotion();
+
+  // a soft staggered drift-in for the header lines on first paint
+  const item: Variants = reduce
+    ? { hidden: { opacity: 1 }, show: { opacity: 1 } }
+    : {
+        hidden: { opacity: 0, y: 12 },
+        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 26 } },
+      };
+  const headerStagger: Variants = {
+    show: { transition: { staggerChildren: 0.09, delayChildren: 0.04 } },
+  };
 
   // report the season currently in view, so the sky & weather can shift to match
   useEffect(() => {
@@ -83,19 +110,27 @@ export function Garden({
 
   return (
     <main className="scroll garden">
-      <header className="garden__head">
-        <button
+      <motion.header
+        className="garden__head"
+        initial="hidden"
+        animate="show"
+        variants={headerStagger}
+      >
+        <motion.button
           className="gear"
           onClick={onOpenSettings}
           aria-label="Settings"
+          variants={item}
+          whileTap={{ scale: 0.85, rotate: 35 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
         >
           <GearIcon />
-        </button>
-        <p className="eyebrow garden__hello">
+        </motion.button>
+        <motion.p className="eyebrow garden__hello" variants={item}>
           {greeting()}
           {name ? `, ${name}` : ""}
-        </p>
-        <h1 className="garden__title">
+        </motion.p>
+        <motion.h1 className="garden__title" variants={item}>
           {streak > 0 ? (
             <>
               your garden is
@@ -109,13 +144,13 @@ export function Garden({
               <em>something today</em>
             </>
           )}
-        </h1>
+        </motion.h1>
         {streak > 0 && !milestone && (
-          <p className="garden__sub">
+          <motion.p className="garden__sub" variants={item}>
             {loggedToday
               ? "today is planted — come back tomorrow 🌱"
               : "you're on a streak, keep it tender"}
-          </p>
+          </motion.p>
         )}
         {milestone && (
           <div className="bouquet-badge">
@@ -126,15 +161,20 @@ export function Garden({
             </div>
           </div>
         )}
-      </header>
+      </motion.header>
 
-      <div data-season={seasonOfKey(new Date().toISOString().slice(0, 10))}>
+      <motion.div
+        data-season={seasonOfKey(new Date().toISOString().slice(0, 10))}
+        initial={reduce ? { opacity: 1 } : { opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 240, damping: 26, delay: 0.18 }}
+      >
         <TodayPlot
           entry={entries.find((e) => isToday(e.date))}
           onPlant={onPlantToday}
           onOpen={onOpenDay}
         />
-      </div>
+      </motion.div>
 
       {!loaded ? null : past.length === 0 ? (
         <EmptyGarden />
@@ -161,40 +201,54 @@ export function Garden({
 
           {layout.items.map((it) =>
             it.type === "marker" ? (
-              <div
-                className="month-marker"
-                key={`m-${it.key}`}
-                style={{ top: `${it.y}px` }}
-                data-season={seasonOfKey(it.key + "-01")}
-              >
-                <FloralFrame variant="sign" seed={it.key} />
-                <span className="month-marker__leaf" aria-hidden="true">
-                  <MarkerSprig />
-                </span>
-                <span className="month-marker__name">{it.label}</span>
-                <span className="month-marker__count">
-                  {it.count} {it.count === 1 ? "day" : "days"} grown
-                </span>
+              <div className="marker-anchor" key={`m-${it.key}`} style={{ top: `${it.y}px` }}>
+                <motion.div
+                  className="month-marker"
+                  data-season={seasonOfKey(it.key + "-01")}
+                  initial={reduce ? { opacity: 1 } : { opacity: 0, filter: "blur(7px)" }}
+                  whileInView={{ opacity: 1, filter: "blur(0px)" }}
+                  viewport={REVEAL_VP}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                >
+                  <FloralFrame variant="sign" seed={it.key} />
+                  <span className="month-marker__leaf" aria-hidden="true">
+                    <MarkerSprig />
+                  </span>
+                  <span className="month-marker__name">{it.label}</span>
+                  <span className="month-marker__count">
+                    {it.count} {it.count === 1 ? "day" : "days"} grown
+                  </span>
+                </motion.div>
               </div>
             ) : (
-              <button
+              <div
+                className="node-anchor"
                 key={it.entry.date}
-                className={`node node--${it.side}`}
                 style={{ top: `${it.y}px`, left: `${it.side === "left" ? 30 : 70}%` }}
-                onClick={() => onOpenDay(it.entry.date)}
-                aria-label={`${weekday(it.entry.date)} ${shortDate(it.entry.date)} — open`}
-                data-season={seasonOfKey(it.entry.date)}
               >
-                <span className="node__plant">
-                  <PlantFromEntry entry={it.entry} />
-                </span>
-                <span className="node__tag">
-                  <span className="node__date">{shortDate(it.entry.date)}</span>
-                  <span className="node__mood" style={{ color: MOODS[it.entry.mood].bloom }}>
-                    {MOODS[it.entry.mood].label}
+                <motion.button
+                  className={`node node--${it.side}`}
+                  onClick={() => onOpenDay(it.entry.date)}
+                  aria-label={`${weekday(it.entry.date)} ${shortDate(it.entry.date)} — open`}
+                  data-season={seasonOfKey(it.entry.date)}
+                  initial={reduce ? { opacity: 1 } : { opacity: 0, y: 30, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={REVEAL_VP}
+                  transition={{ type: "spring", stiffness: 220, damping: 21 }}
+                  whileTap={{ scale: 0.93 }}
+                  style={{ transformOrigin: "50% 100%" }}
+                >
+                  <span className="node__plant" style={bobStyle(it.entry.date)}>
+                    <PlantFromEntry entry={it.entry} />
                   </span>
-                </span>
-              </button>
+                  <span className="node__tag">
+                    <span className="node__date">{shortDate(it.entry.date)}</span>
+                    <span className="node__mood" style={{ color: MOODS[it.entry.mood].bloom }}>
+                      {MOODS[it.entry.mood].label}
+                    </span>
+                  </span>
+                </motion.button>
+              </div>
             ),
           )}
         </section>

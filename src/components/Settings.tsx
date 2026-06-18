@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { DraggableSheet } from "./Sheet";
 import type { Entry, Prefs } from "../lib/db";
 import {
   disablePush,
@@ -64,9 +65,7 @@ export function Settings({ prefs, entries, onChange, onClose }: Props) {
   }
 
   return (
-    <div className="sheet-backdrop" onClick={onClose}>
-      <div className="sheet sheet--settings" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Settings">
-        <div className="sheet__grip" />
+    <DraggableSheet className="sheet sheet--settings" label="Settings" onClose={onClose}>
         <div className="sheet__scroll">
           <header className="sheet__head">
             <span className="eyebrow">your garden</span>
@@ -192,7 +191,6 @@ export function Settings({ prefs, entries, onChange, onClose }: Props) {
             done
           </button>
         </div>
-      </div>
-    </div>
+    </DraggableSheet>
   );
 }

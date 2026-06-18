@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Sky } from "./components/Sky";
 import { Ambient } from "./components/Ambient";
 import { Garden } from "./components/Garden";
@@ -69,24 +70,42 @@ export default function App() {
       <Sky night={night} />
       <Ambient season={season} />
 
-      {tab === "garden" ? (
-        <Garden
-          entries={entries}
-          prefs={prefs}
-          loaded={loaded}
-          onPlantToday={openToday}
-          onOpenDay={(d) => setViewDate(d)}
-          onOpenSettings={() => setShowSettings(true)}
-          onSeasonChange={setSeason}
-        />
-      ) : (
-        <Almanac
-          entries={entries}
-          onOpenDay={(d) => setViewDate(d)}
-          onPlantDate={plantDate}
-          onSeasonChange={setSeason}
-        />
-      )}
+      <AnimatePresence mode="wait" initial={false}>
+        {tab === "garden" ? (
+          <motion.div
+            key="garden"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.34, ease: [0.16, 0.82, 0.28, 1] }}
+          >
+            <Garden
+              entries={entries}
+              prefs={prefs}
+              loaded={loaded}
+              onPlantToday={openToday}
+              onOpenDay={(d) => setViewDate(d)}
+              onOpenSettings={() => setShowSettings(true)}
+              onSeasonChange={setSeason}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="almanac"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.34, ease: [0.16, 0.82, 0.28, 1] }}
+          >
+            <Almanac
+              entries={entries}
+              onOpenDay={(d) => setViewDate(d)}
+              onPlantDate={plantDate}
+              onSeasonChange={setSeason}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <InstallPrompt />
 
@@ -97,38 +116,47 @@ export default function App() {
         plantPulse={!loggedToday}
       />
 
-      {editDate && (
-        <EntrySheet
-          date={editDate}
-          existing={byDate.get(editDate)}
-          onClose={() => setEditDate(null)}
-          onSaved={async () => {
-            setEditDate(null);
-            await refresh();
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {editDate && (
+          <EntrySheet
+            key="entry"
+            date={editDate}
+            existing={byDate.get(editDate)}
+            onClose={() => setEditDate(null)}
+            onSaved={async () => {
+              setEditDate(null);
+              await refresh();
+            }}
+          />
+        )}
+      </AnimatePresence>
 
-      {viewDate && byDate.get(viewDate) && (
-        <DayCard
-          entry={byDate.get(viewDate)!}
-          onClose={() => setViewDate(null)}
-          onEdit={() => {
-            const d = viewDate;
-            setViewDate(null);
-            setEditDate(d);
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {viewDate && byDate.get(viewDate) && (
+          <DayCard
+            key="card"
+            entry={byDate.get(viewDate)!}
+            onClose={() => setViewDate(null)}
+            onEdit={() => {
+              const d = viewDate;
+              setViewDate(null);
+              setEditDate(d);
+            }}
+          />
+        )}
+      </AnimatePresence>
 
-      {showSettings && (
-        <Settings
-          prefs={prefs}
-          entries={entries}
-          onChange={updatePrefs}
-          onClose={() => setShowSettings(false)}
-        />
-      )}
+      <AnimatePresence>
+        {showSettings && (
+          <Settings
+            key="settings"
+            prefs={prefs}
+            entries={entries}
+            onChange={updatePrefs}
+            onClose={() => setShowSettings(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
