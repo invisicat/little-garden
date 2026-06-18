@@ -1669,14 +1669,14 @@ input {
   overflow: visible;
 }
 
-/* month / year signs: keep them simple, frame them, and send them to the
-   FAR BACK so the path and plants always read in front */
-.month-marker {
-  z-index: 0;
-  overflow: visible;
-}
+/* layering on the trail: dotted path at the very back, then the month sign,
+   then the plants in front — so the path tucks BEHIND the sign, not over it */
 .path__trail {
+  z-index: 0;
+}
+.month-marker {
   z-index: 1;
+  overflow: visible;
 }
 .node {
   z-index: 2;

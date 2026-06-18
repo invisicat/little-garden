@@ -43,12 +43,12 @@ export function DayCard({ entry, onClose, onEdit }: Props) {
 
         <div className="card__chips">
           <span className="chip" style={{ ["--mc" as string]: mood.bloom }}>
-            <FloralFrame variant="chip" />
+            <FloralFrame variant="chip" seed={`${entry.date}-${entry.mood}`} />
             {mood.face} {mood.label}
           </span>
           {entry.weather && (
             <span className="chip chip--plain">
-              <FloralFrame variant="chip" />
+              <FloralFrame variant="chip" seed={`${entry.date}-${entry.weather}`} />
               {WEATHER[entry.weather].glyph} {WEATHER[entry.weather].label}
             </span>
           )}

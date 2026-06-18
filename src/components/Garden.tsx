@@ -167,7 +167,7 @@ export function Garden({
                 style={{ top: `${it.y}px` }}
                 data-season={seasonOfKey(it.key + "-01")}
               >
-                <FloralFrame variant="frame" />
+                <FloralFrame variant="sign" seed={it.key} />
                 <span className="month-marker__leaf" aria-hidden="true">
                   <MarkerSprig />
                 </span>
