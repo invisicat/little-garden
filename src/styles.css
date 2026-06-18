@@ -1648,51 +1648,36 @@ input {
 }
 
 /* ============================================================
-   PETAL EDGE — scalloped flower outline (CSS mask)
-   Carves a continuous petal scallop into all four edges. The
-   drop-shadow follows the scalloped shape (box-shadow can't).
+   BABY'S BREATH — delicate floral frame on chips & month signs
    ============================================================ */
-.petal-edge {
-  --pr: 12px; /* petal radius */
-  border-radius: 0 !important;
-  border: none !important;
-  /* a solid inner block + a ring of bumps tiled to fit each edge ("round") =
-     petals poking out all around, no overlap. default add-compositing. */
-  --petal-bumps: radial-gradient(circle var(--pr) at 50% 50%, #000 98%, #0000);
-  --petal-core: linear-gradient(#000 0 0);
-  -webkit-mask-image: var(--petal-bumps), var(--petal-core);
-  -webkit-mask-size: calc(2 * var(--pr)) calc(2 * var(--pr)),
-    calc(100% - 2 * var(--pr)) calc(100% - 2 * var(--pr));
-  -webkit-mask-position: 0 0, center;
-  -webkit-mask-repeat: round, no-repeat;
-  mask-image: var(--petal-bumps), var(--petal-core);
-  mask-size: calc(2 * var(--pr)) calc(2 * var(--pr)),
-    calc(100% - 2 * var(--pr)) calc(100% - 2 * var(--pr));
-  mask-position: 0 0, center;
-  mask-repeat: round, no-repeat;
-  box-shadow: none !important;
-  filter: drop-shadow(0 5px 12px rgba(58, 45, 36, 0.24));
+.floral-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
 }
-:root[data-theme="night"] .petal-edge {
-  filter: drop-shadow(0 5px 13px rgba(0, 0, 0, 0.5));
+.floret {
+  position: absolute;
+  display: block;
+  line-height: 0;
+  filter: drop-shadow(0 1px 1px rgba(60, 45, 40, 0.14));
 }
 
-/* per-element petal sizing — content needs >= --pr padding so the petal
-   scallops don't bite into it */
-.chip.petal-edge {
-  --pr: 9px;
-  padding: 13px 20px;
+/* chips host the frame and let florets spill past their edge */
+.chip {
+  position: relative;
+  overflow: visible;
 }
-.month-marker.petal-edge {
-  --pr: 11px;
-  padding: 16px 26px;
+
+/* month / year signs: keep them simple, frame them, and send them to the
+   FAR BACK so the path and plants always read in front */
+.month-marker {
+  z-index: 0;
+  overflow: visible;
 }
-.card.petal-edge {
-  --pr: 15px;
+.path__trail {
+  z-index: 1;
 }
-.plot.petal-edge {
-  --pr: 14px;
-}
-.sheet.petal-edge {
-  --pr: 14px;
+.node {
+  z-index: 2;
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { TodayPlot } from "./TodayPlot";
 import { PlantFromEntry } from "./PlantSVG";
 import { WildCluster, Bouquet } from "./Florets";
+import { FloralFrame } from "./FloralFrame";
 import type { Entry, Prefs } from "../lib/db";
 import { MOODS } from "../lib/mood";
 import {
@@ -161,11 +162,12 @@ export function Garden({
           {layout.items.map((it) =>
             it.type === "marker" ? (
               <div
-                className="month-marker petal-edge"
+                className="month-marker"
                 key={`m-${it.key}`}
                 style={{ top: `${it.y}px` }}
                 data-season={seasonOfKey(it.key + "-01")}
               >
+                <FloralFrame variant="frame" />
                 <span className="month-marker__leaf" aria-hidden="true">
                   <MarkerSprig />
                 </span>

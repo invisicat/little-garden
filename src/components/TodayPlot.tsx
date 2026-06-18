@@ -17,7 +17,7 @@ type Props = {
 export function TodayPlot({ entry, onPlant, onOpen }: Props) {
   if (entry) {
     return (
-      <button className="plot plot--grown petal-edge" onClick={() => onOpen(entry.date)}>
+      <button className="plot plot--grown" onClick={() => onOpen(entry.date)}>
         <span className="plot__today-plant">
           <PlantFromEntry entry={entry} grow />
         </span>
@@ -30,7 +30,7 @@ export function TodayPlot({ entry, onPlant, onOpen }: Props) {
   }
 
   return (
-    <button className="plot plot--empty petal-edge" onClick={onPlant}>
+    <button className="plot plot--empty" onClick={onPlant}>
       <span className="plot__soil" aria-hidden="true">
         <span className="plot__seed" />
         <span className="plot__furrow" />

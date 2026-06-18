@@ -65,7 +65,7 @@ export function Settings({ prefs, entries, onChange, onClose }: Props) {
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
-      <div className="sheet sheet--settings petal-edge" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Settings">
+      <div className="sheet sheet--settings" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Settings">
         <div className="sheet__grip" />
         <div className="sheet__scroll">
           <header className="sheet__head">

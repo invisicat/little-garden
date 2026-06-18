@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PlantFromEntry } from "./PlantSVG";
+import { FloralFrame } from "./FloralFrame";
 import type { Entry } from "../lib/db";
 import { MOODS, WEATHER } from "../lib/mood";
 import { prettyDate } from "../lib/date";
@@ -25,7 +26,7 @@ export function DayCard({ entry, onClose, onEdit }: Props) {
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <div
-        className="card petal-edge"
+        className="card"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-label={prettyDate(entry.date)}
@@ -41,11 +42,13 @@ export function DayCard({ entry, onClose, onEdit }: Props) {
         <p className="card__date">{prettyDate(entry.date)}</p>
 
         <div className="card__chips">
-          <span className="chip petal-edge" style={{ ["--mc" as string]: mood.bloom }}>
+          <span className="chip" style={{ ["--mc" as string]: mood.bloom }}>
+            <FloralFrame variant="chip" />
             {mood.face} {mood.label}
           </span>
           {entry.weather && (
-            <span className="chip chip--plain petal-edge">
+            <span className="chip chip--plain">
+              <FloralFrame variant="chip" />
               {WEATHER[entry.weather].glyph} {WEATHER[entry.weather].label}
             </span>
           )}
